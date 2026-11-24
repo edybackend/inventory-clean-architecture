@@ -13,7 +13,7 @@ public class ProductTests
     {
         var product = NewProduct();
 
-        Assert.Equal("KB-100", product.Sku.Value);
+        Assert.Equal("KB-100", product.Sku);
         Assert.Equal(0, product.QuantityOnHand);
         Assert.Equal(1, product.Version);
         Assert.Empty(product.NewMovements);

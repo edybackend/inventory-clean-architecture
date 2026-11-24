@@ -18,7 +18,7 @@ public class RegisterProductHandlerTests
 
         Assert.True(result.IsSuccess);
         var product = await _store.GetByIdAsync(result.Value, TestContext.Current.CancellationToken);
-        Assert.Equal("KB-100", product!.Sku.Value);
+        Assert.Equal("KB-100", product!.Sku);
         Assert.Equal(1, _store.SaveCount);
     }
 

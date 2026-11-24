@@ -18,7 +18,7 @@ internal sealed class InMemoryProducts : IProductRepository, IUnitOfWork
         Task.FromResult(_products.GetValueOrDefault(productId));
 
     public Task<bool> SkuExistsAsync(Sku sku, CancellationToken cancellationToken) =>
-        Task.FromResult(_products.Values.Any(p => p.Sku == sku));
+        Task.FromResult(_products.Values.Any(p => p.Sku == sku.Value));
 
     public Task SaveChangesAsync(CancellationToken cancellationToken)
     {

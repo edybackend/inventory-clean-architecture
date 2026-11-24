@@ -13,14 +13,14 @@ public sealed class Product
 
     private Product()
     {
-        Sku = null!; // required by EF Core
+        Sku = string.Empty; // required by EF Core
         Name = string.Empty;
     }
 
     private Product(Guid id, Sku sku, string name, int minimumStock, DateTimeOffset createdAt)
     {
         Id = id;
-        Sku = sku;
+        Sku = sku.Value;
         Name = name;
         MinimumStock = minimumStock;
         Version = 1;
@@ -29,7 +29,8 @@ public sealed class Product
 
     public Guid Id { get; private set; }
 
-    public Sku Sku { get; private set; }
+    /// <summary>Normalized SKU. The <see cref="Domain.Sku"/> value object guards the format; it is stored as plain text.</summary>
+    public string Sku { get; private set; }
 
     public string Name { get; private set; }
 
