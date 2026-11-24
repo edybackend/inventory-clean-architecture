@@ -7,8 +7,6 @@ Um serviço de controle de estoque feito como **uma única aplicação bem divid
 EF Core sobre SQLite e interface em Angular. O estoque só muda por um histórico de movimentações que nunca é alterado,
 e duas pessoas mexendo no mesmo produto ao mesmo tempo nunca sobrescrevem uma à outra.
 
-Pequeno de propósito: dá para ler em cerca de 15 minutos e subir com um comando.
-
 ## Como rodar
 
 Requisito: Docker.
@@ -136,16 +134,9 @@ cd web && npm ci && npm test        # testes do Angular (Vitest)
 - **Sem autenticação.** Fora do escopo deste repositório, para manter o foco no domínio e nas camadas.
 - **Saldo armazenado.** O produto guarda o saldo em vez de somar o histórico a cada leitura. Isso mantém a leitura rápida; a invariante é protegida pelo domínio e pelos testes.
 
-## Engenharia assistida por IA
+## Trabalhando com um agente de IA
 
-Este projeto foi construído com o Claude Code sob controles explícitos de engenharia:
-
-- **Regras do projeto** ([`CLAUDE.md`](CLAUDE.md)) definem a arquitetura, as regras de domínio e os limites que o agente deve seguir.
-- **Hooks** ([`.claude/settings.json`](.claude/settings.json)) formatam cada alteração, bloqueiam edição de segredos e arquivos gerados e rodam os portões de qualidade antes de uma tarefa ser considerada pronta.
-- **Spec first**: cada funcionalidade começa como uma spec em [`specs/`](specs) com critérios de aceite.
-- **Os mesmos portões para cada linha**: o CI exige warnings como erro, formatação, testes de unidade/integração/arquitetura, smoke test do contêiner e varredura de segredos.
-
-A arquitetura é minha e eu reviso cada alteração.
+A regra de dependência é fácil de enunciar e fácil de quebrar, então não fica a cargo da disciplina: testes de arquitetura quebram o build, e o [`CLAUDE.md`](CLAUDE.md) explica o que cada camada pode conhecer. O agente com que trabalho lê essas regras em toda sessão; os hooks em [`.claude/`](.claude) formatam cada mudança e impedem a conclusão enquanto build ou testes estiverem vermelhos.
 
 ## Licença
 

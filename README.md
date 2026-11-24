@@ -7,8 +7,6 @@ A stock control service built as **one well-layered application**: .NET 10 with 
 EF Core on SQLite and an Angular UI. Stock changes only through an append-only history of movements,
 and two people changing the same product at the same time can never overwrite each other.
 
-Small on purpose: it can be read in about 15 minutes and started with one command.
-
 ## Quick start
 
 Requirements: Docker.
@@ -136,16 +134,9 @@ cd web && npm ci && npm test        # Angular unit tests (Vitest)
 - **No authentication.** Out of scope for this repository, to keep the focus on the domain and the layers.
 - **Stored balance.** The product keeps its balance instead of summing the history on every read. This keeps reads fast; the invariant is protected by the domain and by tests.
 
-## AI-Assisted Engineering
+## Working with an AI agent
 
-This project was built with Claude Code under explicit engineering controls:
-
-- **Project rules** ([`CLAUDE.md`](CLAUDE.md)) define the architecture, domain rules and boundaries the agent must follow.
-- **Hooks** ([`.claude/settings.json`](.claude/settings.json)) format every change, block edits to secrets and generated files, and run the quality gates before a task is considered done.
-- **Spec-first**: each feature starts as a spec in [`specs/`](specs) with acceptance criteria.
-- **Same quality gates for every line**: CI enforces warnings as errors, formatting, unit/integration/architecture tests, a container smoke test and secret scanning.
-
-I own the architecture and review every change.
+The dependency rule is easy to state and easy to break, so it is not left to discipline: architecture tests fail the build, and [`CLAUDE.md`](CLAUDE.md) spells out what each layer may know. The agent I work with reads those rules on every session; the hooks in [`.claude/`](.claude) format each change and stop it from finishing while build or tests are red.
 
 ## License
 
