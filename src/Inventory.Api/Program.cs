@@ -32,6 +32,8 @@ app.UseStaticFiles();
 app.MapOpenApi();
 app.MapHealthChecks("/health");
 app.MapProductEndpoints();
+// Unknown /api routes are 404 problems; every other unknown path is an Angular route and gets index.html.
+app.MapFallback("/api/{**path}", () => TypedResults.Problem(statusCode: StatusCodes.Status404NotFound));
 app.MapFallbackToFile("index.html");
 
 await app.RunAsync();

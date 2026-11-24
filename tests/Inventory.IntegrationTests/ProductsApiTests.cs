@@ -164,4 +164,12 @@ public class ProductsApiTests(InventoryApiFactory factory) : IClassFixture<Inven
 
         Assert.Equal(0, result!.TotalCount);
     }
+
+    [Fact]
+    public async Task Unknown_api_route_is_404_not_the_spa_page()
+    {
+        var response = await _client.GetAsync("/api/does-not-exist", TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
 }
