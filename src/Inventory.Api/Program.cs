@@ -17,7 +17,14 @@ var app = builder.Build();
 
 await app.Services.InitializeInventoryDatabaseAsync(app.Configuration.GetValue("Inventory:SeedSampleData", false));
 
-app.UseExceptionHandler();
+// Malformed JSON (e.g. an unknown movement type) raises BadHttpRequestException, which carries its own 400.
+// Without the selector the exception handler would turn it into a 500 in Development.
+app.UseExceptionHandler(new ExceptionHandlerOptions
+{
+    StatusCodeSelector = exception => exception is BadHttpRequestException badRequest
+        ? badRequest.StatusCode
+        : StatusCodes.Status500InternalServerError,
+});
 app.UseStatusCodePages();
 app.UseDefaultFiles();
 app.UseStaticFiles();
