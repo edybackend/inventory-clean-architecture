@@ -1,0 +1,34 @@
+<a routerLink="/">← Products</a>
+<h2>New product</h2>
+
+<form class="card form" [formGroup]="form" (ngSubmit)="submit()">
+  <label>
+    SKU
+    <input formControlName="sku" placeholder="KB-100" autocomplete="off" />
+    @if (form.controls.sku.touched && form.controls.sku.invalid) {
+      <small class="field-error">3-20 letters, digits or dashes.</small>
+    }
+    @for (message of fieldErrors()['sku'] ?? []; track message) {
+      <small class="field-error">{{ message }}</small>
+    }
+  </label>
+
+  <label>
+    Name
+    <input formControlName="name" placeholder="Mechanical keyboard" />
+    @if (form.controls.name.touched && form.controls.name.invalid) {
+      <small class="field-error">Required, up to 100 characters.</small>
+    }
+  </label>
+
+  <label>
+    Minimum stock
+    <input type="number" min="0" formControlName="minimumStock" />
+  </label>
+
+  @if (error(); as message) {
+    <p class="alert error" role="alert">{{ message }}</p>
+  }
+
+  <button class="primary" type="submit" [disabled]="saving()">Save</button>
+</form>

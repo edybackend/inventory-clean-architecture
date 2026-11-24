@@ -1,0 +1,89 @@
+<a routerLink="/">← Products</a>
+
+@if (product(); as product) {
+  <header class="detail-header">
+    <div>
+      <h2>{{ product.name }}</h2>
+      <p class="muted">SKU {{ product.sku }} · version {{ product.version }}</p>
+    </div>
+    <div class="stock" [class.low]="product.isBelowMinimum">
+      <span class="stock-number">{{ product.quantityOnHand }}</span>
+      <span>on hand · minimum {{ product.minimumStock }}</span>
+      @if (product.isBelowMinimum) {
+        <span class="badge low">Below minimum</span>
+      }
+    </div>
+  </header>
+
+  <section class="columns">
+    <form class="card form" [formGroup]="form" (ngSubmit)="submit()">
+      <h3>Record a movement</h3>
+      <label>
+        Type
+        <select formControlName="type">
+          <option value="Receipt">Receipt (adds units)</option>
+          <option value="Issue">Issue (removes units)</option>
+          <option value="Adjustment">Adjustment (physical count)</option>
+        </select>
+      </label>
+      <label>
+        {{ quantityLabel() }}
+        <input type="number" min="0" formControlName="quantity" />
+      </label>
+      <label>
+        Reason
+        <input formControlName="reason" placeholder="Sales order 1234" />
+        @if (form.controls.reason.touched && form.controls.reason.invalid) {
+          <small class="field-error">Required, up to 200 characters.</small>
+        }
+      </label>
+
+      @if (notice(); as notice) {
+        <p class="alert" [class]="notice.kind" role="status">{{ notice.text }}</p>
+      }
+
+      <button class="primary" type="submit" [disabled]="saving()">Save movement</button>
+    </form>
+
+    <div class="card">
+      <h3>History</h3>
+      @if (history(); as history) {
+        <table>
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>Type</th>
+              <th class="num">Change</th>
+              <th class="num">Balance</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (movement of history.items; track movement.id) {
+              <tr>
+                <td>{{ movement.occurredAt | date: 'short' }}</td>
+                <td>{{ movement.type }}</td>
+                <td class="num" [class.negative]="movement.change < 0">{{ movement.change > 0 ? '+' : '' }}{{ movement.change }}</td>
+                <td class="num">{{ movement.balanceAfter }}</td>
+                <td>{{ movement.reason }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="empty">No movements yet.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        @if (history.totalCount > history.pageSize) {
+          <nav class="pager" aria-label="History pages">
+            <button type="button" [disabled]="historyPage() <= 1" (click)="goToHistoryPage(historyPage() - 1)">Newer</button>
+            <span>Page {{ history.page }} of {{ totalPages(history) }}</span>
+            <button type="button" [disabled]="historyPage() >= totalPages(history)" (click)="goToHistoryPage(historyPage() + 1)">Older</button>
+          </nav>
+        }
+      }
+    </div>
+  </section>
+} @else if (notice(); as notice) {
+  <p class="alert error" role="alert">{{ notice.text }}</p>
+}

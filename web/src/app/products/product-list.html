@@ -1,0 +1,63 @@
+<section class="toolbar">
+  <form class="filters" (ngSubmit)="applyFilters()">
+    <input
+      type="search"
+      name="search"
+      placeholder="Search by SKU or name"
+      aria-label="Search by SKU or name"
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+    />
+    <label class="check">
+      <input type="checkbox" name="belowMinimum" [ngModel]="belowMinimum()" (ngModelChange)="belowMinimum.set($event); applyFilters()" />
+      Below minimum only
+    </label>
+    <button type="submit">Search</button>
+  </form>
+  <a class="button primary" routerLink="/products/new">New product</a>
+</section>
+
+@if (error(); as message) {
+  <p class="alert error" role="alert">{{ message }}</p>
+}
+
+@if (result(); as result) {
+  <table>
+    <thead>
+      <tr>
+        <th>SKU</th>
+        <th>Name</th>
+        <th class="num">On hand</th>
+        <th class="num">Minimum</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (product of result.items; track product.id) {
+        <tr>
+          <td><a [routerLink]="['/products', product.id]">{{ product.sku }}</a></td>
+          <td>{{ product.name }}</td>
+          <td class="num">{{ product.quantityOnHand }}</td>
+          <td class="num">{{ product.minimumStock }}</td>
+          <td>
+            @if (product.isBelowMinimum) {
+              <span class="badge low">Below minimum</span>
+            } @else {
+              <span class="badge ok">OK</span>
+            }
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" class="empty">No products found.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <nav class="pager" aria-label="Pages">
+    <button type="button" [disabled]="page() <= 1" (click)="goTo(page() - 1)">Previous</button>
+    <span>Page {{ result.page }} of {{ totalPages(result) }} · {{ result.totalCount }} products</span>
+    <button type="button" [disabled]="page() >= totalPages(result)" (click)="goTo(page() + 1)">Next</button>
+  </nav>
+}

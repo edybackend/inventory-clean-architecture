@@ -486,3 +486,6 @@ data/
 *.db
 *.db-shm
 *.db-wal
+
+# Angular build output (served by the API; built by `npm run build` or the Dockerfile)
+src/Inventory.Api/wwwroot/
