@@ -1,0 +1,13 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/data/
+**/*.db
+**/.angular/
+src/Inventory.Api/wwwroot/
+.git/
+.github/
+.claude/
+specs/
+tests/

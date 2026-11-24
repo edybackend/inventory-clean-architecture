@@ -1,0 +1,15 @@
+name: inventory-clean-architecture
+
+services:
+  inventory:
+    build:
+      context: .
+    image: inventory-clean-architecture:local
+    ports:
+      - "8080:8080" # UI + API: http://localhost:8080
+    volumes:
+      - inventory-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  inventory-data:
